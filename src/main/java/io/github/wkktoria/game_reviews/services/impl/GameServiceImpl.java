@@ -42,6 +42,19 @@ public class GameServiceImpl implements GameService {
         return mapToDto(game);
     }
 
+    @Override
+    public GameDto updateGame(GameDto gameDto, int id) {
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new GameNotFoundException("Game could not be updated"));
+        game.setName(gameDto.getName());
+        game.setDeveloper(gameDto.getDeveloper());
+        game.setPublisher(gameDto.getPublisher());
+        game.setReleaseDate(gameDto.getReleaseDate());
+
+        Game updatedGame = gameRepository.save(game);
+        return mapToDto(updatedGame);
+    }
+
     private GameDto mapToDto(Game game) {
         GameDto gameDto = new GameDto();
         gameDto.setId(game.getId());

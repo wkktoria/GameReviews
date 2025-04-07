@@ -11,4 +11,6 @@ public interface GameService {
     List<GameDto> getAllGame();
 
     GameDto getGameById(int id);
+
+    GameDto updateGame(GameDto gameDto, int id);
 }

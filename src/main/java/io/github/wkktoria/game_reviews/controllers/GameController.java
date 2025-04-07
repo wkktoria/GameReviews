@@ -45,9 +45,9 @@ public class GameController {
     }
 
     @PutMapping("game/{id}/update")
-    public ResponseEntity<Game> updateGame(@RequestBody Game game, @PathVariable("id") int gameId) {
-        log.info(game.getName());
-        return ResponseEntity.ok(game);
+    public ResponseEntity<GameDto> updateGame(@RequestBody GameDto ganDto, @PathVariable("id") int gameId) {
+        GameDto response = gameService.updateGame(ganDto, gameId);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("game/{id}/delete")
