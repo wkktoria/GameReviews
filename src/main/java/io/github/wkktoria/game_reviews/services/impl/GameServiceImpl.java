@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import io.github.wkktoria.game_reviews.dtos.GameDto;
+import io.github.wkktoria.game_reviews.exceptions.GameNotFoundException;
 import io.github.wkktoria.game_reviews.models.Game;
 import io.github.wkktoria.game_reviews.repositories.GameRepository;
 import io.github.wkktoria.game_reviews.services.GameService;
@@ -32,6 +33,13 @@ public class GameServiceImpl implements GameService {
     public List<GameDto> getAllGame() {
         List<Game> gameList = gameRepository.findAll();
         return gameList.stream().map(game -> mapToDto(game)).collect(Collectors.toList());
+    }
+
+    @Override
+    public GameDto getGameById(int id) {
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new GameNotFoundException("Game could not be found"));
+        return mapToDto(game);
     }
 
     private GameDto mapToDto(Game game) {

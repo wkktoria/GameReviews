@@ -9,4 +9,6 @@ public interface GameService {
     GameDto createGame(GameDto gameDto);
 
     List<GameDto> getAllGame();
+
+    GameDto getGameById(int id);
 }

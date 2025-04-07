@@ -1,6 +1,5 @@
 package io.github.wkktoria.game_reviews.controllers;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -36,8 +35,8 @@ public class GameController {
     }
 
     @GetMapping("game/{id}")
-    public Game gameDetail(@PathVariable int id) {
-        return new Game(id, "Name", "Developer", "Publisher", LocalDate.now());
+    public ResponseEntity<GameDto> gameDetail(@PathVariable int id) {
+        return ResponseEntity.ok(gameService.getGameById(id));
     }
 
     @PostMapping("game/create")
