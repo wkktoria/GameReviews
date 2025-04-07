@@ -1,7 +1,5 @@
 package io.github.wkktoria.game_reviews.controllers;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,9 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.wkktoria.game_reviews.dtos.GameDto;
+import io.github.wkktoria.game_reviews.dtos.GameResponse;
 import io.github.wkktoria.game_reviews.services.GameService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,8 +29,9 @@ public class GameController {
     }
 
     @GetMapping("game")
-    public ResponseEntity<List<GameDto>> getGames() {
-        return new ResponseEntity<>(gameService.getAllGame(), HttpStatus.OK);
+    public ResponseEntity<GameResponse> getGames(@RequestParam(defaultValue = "1", required = false) int pageNumber,
+            @RequestParam(defaultValue = "10", required = false) int pageSize) {
+        return new ResponseEntity<>(gameService.getAllGame(pageNumber, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("game/{id}")

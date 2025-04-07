@@ -3,9 +3,13 @@ package io.github.wkktoria.game_reviews.services.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import io.github.wkktoria.game_reviews.dtos.GameDto;
+import io.github.wkktoria.game_reviews.dtos.GameResponse;
 import io.github.wkktoria.game_reviews.exceptions.GameNotFoundException;
 import io.github.wkktoria.game_reviews.models.Game;
 import io.github.wkktoria.game_reviews.repositories.GameRepository;
@@ -30,9 +34,18 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<GameDto> getAllGame() {
-        List<Game> gameList = gameRepository.findAll();
-        return gameList.stream().map(game -> mapToDto(game)).collect(Collectors.toList());
+    public GameResponse getAllGame(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<Game> games = gameRepository.findAll(pageable);
+        List<Game> listOfGame = games.getContent();
+        List<GameDto> content = listOfGame.stream()
+                .map(game -> mapToDto(game)).collect(Collectors.toList());
+
+        GameResponse gameResponse = GameResponse.builder()
+                .content(content).pageNumber(games.getNumber() + 1).pageSize(games.getSize())
+                .totalElements(games.getTotalElements()).totalPages(games.getTotalPages()).last(games.isLast())
+                .build();
+        return gameResponse;
     }
 
     @Override

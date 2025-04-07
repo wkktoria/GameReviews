@@ -1,14 +1,13 @@
 package io.github.wkktoria.game_reviews.services;
 
-import java.util.List;
-
 import io.github.wkktoria.game_reviews.dtos.GameDto;
+import io.github.wkktoria.game_reviews.dtos.GameResponse;
 
 public interface GameService {
 
     GameDto createGame(GameDto gameDto);
 
-    List<GameDto> getAllGame();
+    GameResponse getAllGame(int pageNumber, int pageSize);
 
     GameDto getGameById(int id);
 
