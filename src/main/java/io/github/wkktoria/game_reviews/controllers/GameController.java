@@ -1,8 +1,6 @@
 package io.github.wkktoria.game_reviews.controllers;
 
 import java.time.LocalDate;
-import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
