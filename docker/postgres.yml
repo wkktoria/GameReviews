@@ -1,24 +1,6 @@
 services:
-  api:
-    container_name: game_reviews_api
-    build:
-      context: ../
-      dockerfile: Dockerfile
-      args:
-        - PORT=$PORT
-        - POSTGRES_USER=$POSTGRES_USER
-        - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-        - POSTGRES_HOST=db
-    ports:
-      - ${PORT}:${PORT}
-    networks:
-      - game-reviews
-    restart: always
-    depends_on:
-      db:
-        condition: service_healthy
   db:
-    container_name: game_reviews_postgres
+    container_name: postgres
     image: postgres:latest
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -30,7 +12,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - game-reviews
+      - db
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER"]
@@ -39,7 +21,7 @@ services:
       retries: 5
 
 networks:
-  game-reviews:
+  db:
     driver: bridge
 
 volumes:
