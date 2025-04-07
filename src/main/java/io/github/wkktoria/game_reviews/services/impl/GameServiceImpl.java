@@ -55,6 +55,13 @@ public class GameServiceImpl implements GameService {
         return mapToDto(updatedGame);
     }
 
+    @Override
+    public void deleteGame(int id) {
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new GameNotFoundException("Game could not be deleted"));
+        gameRepository.delete(game);
+    }
+
     private GameDto mapToDto(Game game) {
         GameDto gameDto = new GameDto();
         gameDto.setId(game.getId());

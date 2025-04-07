@@ -13,4 +13,6 @@ public interface GameService {
     GameDto getGameById(int id);
 
     GameDto updateGame(GameDto gameDto, int id);
+
+    void deleteGame(int id);
 }

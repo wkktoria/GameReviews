@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.wkktoria.game_reviews.dtos.GameDto;
-import io.github.wkktoria.game_reviews.models.Game;
 import io.github.wkktoria.game_reviews.services.GameService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,7 +51,7 @@ public class GameController {
 
     @DeleteMapping("game/{id}/delete")
     public ResponseEntity<String> deleteGame(@PathVariable("id") int gameId) {
-        log.info(String.valueOf(gameId));
-        return ResponseEntity.ok("Game deleted successfully");
+        gameService.deleteGame(gameId);
+        return ResponseEntity.ok("Game deleted");
     }
 }
