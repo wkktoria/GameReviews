@@ -3,7 +3,6 @@ package io.github.wkktoria.game_reviews.controllers;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -17,13 +16,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.wkktoria.game_reviews.dtos.GameDto;
 import io.github.wkktoria.game_reviews.models.Game;
+import io.github.wkktoria.game_reviews.services.GameService;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/")
 @Slf4j
 public class GameController {
+
+    private GameService gameService;
+
+    public GameController(GameService gameService) {
+        this.gameService = gameService;
+    }
 
     @GetMapping("game")
     public ResponseEntity<List<Game>> getGames() {
@@ -43,13 +50,12 @@ public class GameController {
 
     @GetMapping("game/{id}")
     public Game gameDetail(@PathVariable int id) {
-        return new Game(id, "Name", "Developer", "Publisher", new Date());
+        return new Game(id, "Name", "Developer", "Publisher", LocalDate.now());
     }
 
     @PostMapping("game/create")
-    public ResponseEntity<Game> createGame(@RequestBody Game game) {
-        log.info(game.getName());
-        return new ResponseEntity<>(game, HttpStatus.CREATED);
+    public ResponseEntity<GameDto> createGame(@RequestBody GameDto gameDto) {
+        return new ResponseEntity<>(gameService.createGame(gameDto), HttpStatus.CREATED);
     }
 
     @PutMapping("game/{id}/update")

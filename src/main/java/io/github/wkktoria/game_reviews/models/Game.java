@@ -6,8 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,14 +23,5 @@ public class Game {
     private String name;
     private String developer;
     private String publisher;
-    private Date releaseDate;
-
-    public Game(int id, String name, String developer, String publisher, LocalDate releaseDate) {
-        this.id = id;
-        this.name = name;
-        this.developer = developer;
-        this.publisher = publisher;
-        this.releaseDate = Date.from(releaseDate
-                .atStartOfDay(ZoneId.systemDefault()).toInstant());
-    }
+    private LocalDate releaseDate;
 }
