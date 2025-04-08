@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import io.github.wkktoria.game_reviews.dtos.ReviewDto;
 import io.github.wkktoria.game_reviews.exceptions.GameNotFoundException;
+import io.github.wkktoria.game_reviews.exceptions.ReviewNotFoundException;
 import io.github.wkktoria.game_reviews.models.Game;
 import io.github.wkktoria.game_reviews.models.Review;
 import io.github.wkktoria.game_reviews.repositories.GameRepository;
@@ -19,6 +20,8 @@ public class ReviewServiceImpl implements ReviewService {
     private ReviewRepository reviewRepository;
     private GameRepository gameRepository;
 
+    private static final String GAME_NOT_FOUND_MESSAGE = "Game with associated review not found";
+
     public ReviewServiceImpl(ReviewRepository reviewRepository, GameRepository gameRepository) {
         this.reviewRepository = reviewRepository;
         this.gameRepository = gameRepository;
@@ -28,7 +31,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDto createReview(int gameId, ReviewDto reviewDto) {
         Review review = mapToEntity(reviewDto);
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new GameNotFoundException("Game with associated review not found"));
+                .orElseThrow(() -> new GameNotFoundException(GAME_NOT_FOUND_MESSAGE));
 
         review.setGame(game);
 
@@ -41,6 +44,20 @@ public class ReviewServiceImpl implements ReviewService {
         List<Review> reviews = reviewRepository.findByGameId(id);
         return reviews.stream()
                 .map(review -> mapToDto(review)).collect(Collectors.toList());
+    }
+
+    @Override
+    public ReviewDto getReviewById(int reviewId, int gameId) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new GameNotFoundException(GAME_NOT_FOUND_MESSAGE));
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ReviewNotFoundException("Review with associated game not found"));
+
+        if (review.getGame().getId() != game.getId()) {
+            throw new ReviewNotFoundException("This review does not belong to a game");
+        }
+
+        return mapToDto(review);
     }
 
     private ReviewDto mapToDto(Review review) {
