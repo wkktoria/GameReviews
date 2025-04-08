@@ -76,22 +76,24 @@ public class GameServiceImpl implements GameService {
     }
 
     private GameDto mapToDto(Game game) {
-        GameDto gameDto = new GameDto();
-        gameDto.setId(game.getId());
-        gameDto.setName(game.getName());
-        gameDto.setDeveloper(game.getDeveloper());
-        gameDto.setPublisher(game.getPublisher());
-        gameDto.setReleaseDate(game.getReleaseDate());
+        GameDto gameDto = GameDto.builder()
+                .id(game.getId())
+                .name(game.getName())
+                .developer(game.getDeveloper())
+                .publisher(game.getPublisher())
+                .releaseDate(game.getReleaseDate())
+                .build();
         return gameDto;
     }
 
     private Game mapToEntity(GameDto gameDto) {
-        Game game = new Game();
-        game.setId(gameDto.getId());
-        game.setName(gameDto.getName());
-        game.setDeveloper(gameDto.getDeveloper());
-        game.setPublisher(gameDto.getPublisher());
-        game.setReleaseDate(gameDto.getReleaseDate());
+        Game game = Game.builder()
+                .id(gameDto.getId())
+                .name(gameDto.getName())
+                .developer(gameDto.getDeveloper())
+                .publisher(gameDto.getPublisher())
+                .releaseDate(gameDto.getReleaseDate())
+                .build();
         return game;
     }
 }
