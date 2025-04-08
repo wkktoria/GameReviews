@@ -32,6 +32,7 @@ public class Game {
     private String publisher;
     private LocalDate releaseDate;
 
+    @Builder.Default
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<Review>();
 }
