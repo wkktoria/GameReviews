@@ -2,7 +2,6 @@ package io.github.wkktoria.game_reviews.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -30,7 +29,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.GET).authenticated()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
@@ -40,12 +39,12 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         UserDetails admin = User.builder()
                 .username("admin")
-                .password("{noop}Str0ngP@$$w0rd")
+                .password(passwordEncoder().encode("Str0ngP@$$w0rd"))
                 .roles("ADMIN")
                 .build();
         UserDetails user = User.builder()
                 .username("user")
-                .password("{noop}P@$$w0rd")
+                .password(passwordEncoder().encode("P@$$w0rd"))
                 .roles("USER")
                 .build();
         return new InMemoryUserDetailsManager(admin, user);
