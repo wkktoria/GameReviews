@@ -55,7 +55,7 @@ public class ReviewController {
 
     @DeleteMapping("/game/{gameId}/reviews/{id}")
     public ResponseEntity<String> deleteReview(@PathVariable int gameId, @PathVariable(value = "id") int reviewId) {
-        log.info("Deleting review with id = %d", reviewId);
+        log.info(String.format("Deleting review with id = %d", reviewId));
         reviewService.deleteReview(gameId, reviewId);
         return ResponseEntity.ok("Review deleted successfully");
     }
