@@ -81,6 +81,20 @@ public class ReviewServiceImpl implements ReviewService {
         return mapToDto(updatedReview);
     }
 
+    @Override
+    public void deleteReview(int gameId, int reviewId) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new GameNotFoundException(GAME_NOT_FOUND_MESSAGE));
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ReviewNotFoundException(REVIEW_NOT_FOUND_MESSAGE));
+
+        if (review.getGame().getId() != game.getId()) {
+            throw new ReviewNotFoundException(REVIEW_ID_NOT_MATCH_MESSAGE);
+        }
+
+        reviewRepository.delete(review);
+    }
+
     private ReviewDto mapToDto(Review review) {
         ReviewDto reviewDto = ReviewDto.builder()
                 .id(review.getId())

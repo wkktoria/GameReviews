@@ -13,4 +13,6 @@ public interface ReviewService {
     ReviewDto getReviewById(int reviewId, int gameId);
 
     ReviewDto updateReview(int gameId, int reviewId, ReviewDto reviewDto);
+
+    void deleteReview(int gameId, int reviewId);
 }
