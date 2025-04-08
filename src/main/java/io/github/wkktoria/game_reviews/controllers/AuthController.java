@@ -39,6 +39,8 @@ public class AuthController {
 
     @PostMapping("register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+        log.info(String.format("Registering user: %s", registerDto));
+
         if (userRepository.existsByUsername(registerDto.getUsername())) {
             return new ResponseEntity<>("Username is taken", HttpStatus.BAD_REQUEST);
         }
@@ -50,6 +52,7 @@ public class AuthController {
         Optional<RoleEntity> role = roleRepository.findByName("USER");
 
         if (role.isEmpty()) {
+            log.info("Creating USER role");
             roleRepository.save(RoleEntity.builder().name("USER").build());
             role = roleRepository.findByName("USER");
         }
