@@ -21,6 +21,8 @@ public class ReviewServiceImpl implements ReviewService {
     private GameRepository gameRepository;
 
     private static final String GAME_NOT_FOUND_MESSAGE = "Game with associated review not found";
+    private static final String REVIEW_NOT_FOUND_MESSAGE = "Review with associated game not found";
+    private static final String REVIEW_ID_NOT_MATCH_MESSAGE = "This review does not belong to a game";
 
     public ReviewServiceImpl(ReviewRepository reviewRepository, GameRepository gameRepository) {
         this.reviewRepository = reviewRepository;
@@ -51,13 +53,32 @@ public class ReviewServiceImpl implements ReviewService {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new GameNotFoundException(GAME_NOT_FOUND_MESSAGE));
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ReviewNotFoundException("Review with associated game not found"));
+                .orElseThrow(() -> new ReviewNotFoundException(REVIEW_NOT_FOUND_MESSAGE));
 
         if (review.getGame().getId() != game.getId()) {
-            throw new ReviewNotFoundException("This review does not belong to a game");
+            throw new ReviewNotFoundException(REVIEW_ID_NOT_MATCH_MESSAGE);
         }
 
         return mapToDto(review);
+    }
+
+    @Override
+    public ReviewDto updateReview(int gameId, int reviewId, ReviewDto reviewDto) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new GameNotFoundException(GAME_NOT_FOUND_MESSAGE));
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ReviewNotFoundException(REVIEW_NOT_FOUND_MESSAGE));
+
+        if (review.getGame().getId() != game.getId()) {
+            throw new ReviewNotFoundException(REVIEW_ID_NOT_MATCH_MESSAGE);
+        }
+
+        review.setTitle(reviewDto.getTitle());
+        review.setContent(reviewDto.getContent());
+        review.setStars(reviewDto.getStars());
+
+        Review updatedReview = reviewRepository.save(review);
+        return mapToDto(updatedReview);
     }
 
     private ReviewDto mapToDto(Review review) {

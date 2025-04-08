@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -41,5 +42,13 @@ public class ReviewController {
     public ResponseEntity<ReviewDto> getReviewById(@PathVariable int gameId, @PathVariable(value = "id") int reviewId) {
         ReviewDto reviewDto = reviewService.getReviewById(reviewId, gameId);
         return ResponseEntity.ok(reviewDto);
+    }
+
+    @PutMapping("/game/{gameId}/reviews/{id}")
+    public ResponseEntity<ReviewDto> updateReview(@PathVariable int gameId, @PathVariable(value = "id") int reviewId,
+            @RequestBody ReviewDto reviewDto) {
+        log.info(String.format("Updating review: %s", reviewDto));
+        ReviewDto updatedReview = reviewService.updateReview(gameId, reviewId, reviewDto);
+        return ResponseEntity.ok(updatedReview);
     }
 }
