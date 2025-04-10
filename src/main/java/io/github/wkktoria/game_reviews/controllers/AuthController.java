@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.wkktoria.game_reviews.dtos.AuthResponse;
 import io.github.wkktoria.game_reviews.dtos.LoginDto;
 import io.github.wkktoria.game_reviews.dtos.RegisterDto;
 import io.github.wkktoria.game_reviews.models.RoleEntity;
 import io.github.wkktoria.game_reviews.models.UserEntity;
 import io.github.wkktoria.game_reviews.repositories.RoleRepository;
 import io.github.wkktoria.game_reviews.repositories.UserRepository;
+import io.github.wkktoria.game_reviews.security.JwtProvider;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -32,13 +34,15 @@ public class AuthController {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
+    private JwtProvider tokenProvider;
 
     public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
-            RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+            RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtProvider tokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.tokenProvider = tokenProvider;
     }
 
     @PostMapping("register")
@@ -68,10 +72,11 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User signed in success", HttpStatus.OK);
+        String token = tokenProvider.generateToken(authentication);
+        return new ResponseEntity<>(new AuthResponse(token), HttpStatus.OK);
     }
 }

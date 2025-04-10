@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtProvider {
@@ -20,20 +19,25 @@ public class JwtProvider {
 
         String token = Jwts.builder()
                 .subject(username).issuedAt(new Date()).expiration(expiryDate)
-                .signWith(Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.getBytes()))
+                .signWith(SecurityConstants.JWT_SECRET_KEY)
                 .compact();
         return token;
     }
 
     public String getUsernameFromJwt(String token) {
-        Claims claims = Jwts.parser().verifyWith(Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.getBytes())).build()
-                .parseSignedClaims(token).getPayload();
+        Claims claims = Jwts.parser()
+                .verifyWith(SecurityConstants.JWT_SECRET_KEY)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
         return claims.getSubject();
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().verifyWith(Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.getBytes())).build()
+            Jwts.parser()
+                    .verifyWith(SecurityConstants.JWT_SECRET_KEY)
+                    .build()
                     .parseSignedClaims(token);
             return true;
         } catch (Exception exception) {
