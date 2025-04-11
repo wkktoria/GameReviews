@@ -2,6 +2,7 @@ package io.github.wkktoria.game_reviews.repositories;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -80,5 +81,66 @@ public class GameRepositoryTests {
 
         // Assert
         Assertions.assertThat(returnGame).isNotNull();
+    }
+
+    @Test
+    public void GameRepository_FindByName_ReturnsGameNotNull() {
+        // Arrange
+        Game game = Game.builder()
+                .name("Name")
+                .developer("Developer")
+                .publisher("Publisher")
+                .releaseDate(LocalDate.now())
+                .build();
+        gameRepository.save(game);
+
+        // Act
+        Game returnGame = gameRepository.findByName(game.getName()).get();
+
+        // Assert
+        Assertions.assertThat(returnGame).isNotNull();
+    }
+
+    @Test
+    public void GameRepository_UpdateGame_ReturnsGameNotNull() {
+        // Arrange
+        Game game = Game.builder()
+                .name("Name")
+                .developer("Developer")
+                .publisher("Publisher")
+                .releaseDate(LocalDate.now())
+                .build();
+        gameRepository.save(game);
+
+        Game savedGame = gameRepository.findById(game.getId()).get();
+        savedGame.setName("Updated Name");
+        savedGame.setDeveloper("Updated Developer");
+
+        // Act
+        Game updatedGame = gameRepository.save(savedGame);
+
+        // Assert
+        Assertions.assertThat(updatedGame).isNotNull();
+        Assertions.assertThat(updatedGame.getName()).isNotNull();
+        Assertions.assertThat(updatedGame.getDeveloper()).isNotNull();
+    }
+
+    @Test
+    public void GameRepository_DeleteById_ReturnsGamIsEmpty() {
+        // Arrange
+        Game game = Game.builder()
+                .name("Name")
+                .developer("Developer")
+                .publisher("Publisher")
+                .releaseDate(LocalDate.now())
+                .build();
+        gameRepository.save(game);
+
+        // Act
+        gameRepository.deleteById(game.getId());
+        Optional<Game> returnGame = gameRepository.findById(game.getId());
+
+        // Assert
+        Assertions.assertThat(returnGame).isEmpty();
     }
 }
