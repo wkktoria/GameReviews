@@ -126,7 +126,7 @@ public class GameRepositoryTests {
     }
 
     @Test
-    public void GameRepository_DeleteById_ReturnsGamIsEmpty() {
+    public void GameRepository_DeleteById_ReturnGameIsEmpty() {
         // Arrange
         Game game = Game.builder()
                 .name("Name")
