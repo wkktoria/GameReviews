@@ -116,7 +116,7 @@ public class GameServiceTests {
     }
 
     @Test
-    public void GameService_DeleteGame_() {
+    public void GameService_DeleteGame_ReturnsVoid() {
         // Arrange
         Game game = Game.builder()
                 .name("Name")

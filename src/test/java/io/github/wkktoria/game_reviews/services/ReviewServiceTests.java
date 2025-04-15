@@ -17,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import io.github.wkktoria.game_reviews.dtos.GameDto;
 import io.github.wkktoria.game_reviews.dtos.ReviewDto;
 import io.github.wkktoria.game_reviews.models.Game;
 import io.github.wkktoria.game_reviews.models.Review;
@@ -37,19 +36,12 @@ public class ReviewServiceTests {
     private ReviewServiceImpl reviewService;
 
     private Game game;
-    private GameDto gameDto;
     private Review review;
     private ReviewDto reviewDto;
 
     @BeforeEach
     public void init() {
         game = Game.builder()
-                .name("Name")
-                .developer("Developer")
-                .publisher("Publisher")
-                .releaseDate(LocalDate.now())
-                .build();
-        gameDto = GameDto.builder()
                 .name("Name")
                 .developer("Developer")
                 .publisher("Publisher")
